@@ -22,6 +22,17 @@ class CustomerDetailView(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, TC):
-        snippet = Customer.objects.get(TC=TC)
-        serializer = CustomerSerializer(snippet)
+        customer = Customer.objects.get(TC=TC)
+        serializer = CustomerSerializer(customer)
         return Response(serializer.data)
+
+class CustomerDeleteView(generics.DestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, TC):
+        customer = Customer.objects.get(TC=TC)
+        customer.delete()
+        return Response('Deleted successfully')
